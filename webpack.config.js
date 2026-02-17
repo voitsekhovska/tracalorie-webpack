@@ -8,7 +8,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
-    publicPath: "/repo-name/",
+    publicPath: "/tracalorie-webpack/",
   },
   devServer: {
     static: {
@@ -24,7 +24,12 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [
+          process.env.NODE_ENV === "production"
+            ? MiniCssExtractPlugin.loader
+            : "style-loader",
+          "css-loader",
+        ],
       },
       {
         test: /\.js$/,
@@ -44,6 +49,8 @@ module.exports = {
       filename: "index.html",
       template: "./src/index.html",
     }),
-    new MiniCssExtractPlugin(),
+    ...(process.env.NODE_ENV === "production"
+    ? [new MiniCssExtractPlugin()]
+    : []),
   ],
 };
